@@ -62,7 +62,7 @@ int main(int argc,int *argv[])
    		/*dup2(fd_pipe[1],1)可以把它想成複製fd_pipe[1]且當作是標準輸出(stdout)*/
    		/*0:stdin 1:stdout 2:stderr */
     		printf("child1\n");
-		fd_fifo=open("/my_fifo",O_RDWR);
+		//fd_fifo=open("/my_fifo",O_RDWR);
 		printf("child2\n");
 		execlp("mplayer","mplayer","-slave","-quiet","-input","file=/my_fifo","/opt/Kalimba.mp3",NULL);
 		/*slave端輸入的指令會存到my_fifo裡面，child process再從my_fifo讀出指令並執行相對應的動作*/
