@@ -54,20 +54,20 @@ void ch7segnum(int seg_tbl_index);
 static irqreturn_t timer2_interrupt(int irq, void *dev_id, struct pt_regs *regs);
 static irqreturn_t timer1_interrupt(int irq, void *dev_id, struct pt_regs *regs);
 
-static void Initial_7SEG (void)
+static void Initial_7SEG (void)		
 {
-        seven_seg_buf[0] = 0xc0;
-        seven_seg_buf[1] = 0xc0;
-        seven_seg_buf[2] = 0xc0;
-        seven_seg_buf[3] = 0xc0;		
+        seven_seg_buf[0] = 0xc0;	//存放第一個七段要顯示的值
+        seven_seg_buf[1] = 0xc0;	//第二個七段
+        seven_seg_buf[2] = 0xc0;	//第三個
+        seven_seg_buf[3] = 0xc0;	//第四個	
 };
 
-static unsigned long led_tbl[]=
+static unsigned long led_tbl[]=		//0~9
 {
 	0xc0,0xf9,0xa4,0xb0,0x99,
 	0x92,0x82,0xf8,0x80,0x90,
 };
-static unsigned long chled[]=
+static unsigned long chled[]=		//change 7seg led
 {
 	S3C2410_GPF3,
 	S3C2410_GPG0,
@@ -75,7 +75,7 @@ static unsigned long chled[]=
 	S3C2410_GPG13,	
 };
 
-static unsigned long seg_table[]=
+static unsigned long seg_table[]=	//TQ2440的pin腳和相對應的七段顯示器腳位
 {
 	S3C2410_GPG10,  //a
 	S3C2410_GPF4,	//b
@@ -108,7 +108,7 @@ static unsigned int seg_cfg_table[]=
 	S3C2410_GPG13_OUTP,
 };
 
-void ch7segnum(int seg_tbl_index)
+void ch7segnum(int seg_tbl_index)	//change number of 7seg led
 {
 	unsigned int temp,lsb,i;
 	//printk("in ch7segnum seg_tbl_index=%d\n",seg_tbl_index);
@@ -169,7 +169,7 @@ static int tq2440_seg_open(struct inode *inode,struct file *filp)
 		s3c2410_gpio_cfgpin(seg_table[i],seg_cfg_table[i]);
 	}
 	
-	err1 = request_irq(IRQ_TIMER2, timer2_interrupt,IRQF_DISABLED, "TIMER2", NULL);
+	err1 = request_irq(IRQ_TIMER2, timer2_interrupt,IRQF_DISABLED, "TIMER2", NULL);		//timer2 interrupt request
 	if(err1)
 	{
 		disable_irq(IRQ_TIMER2);
@@ -201,13 +201,13 @@ static int tq2440_seg_open(struct inode *inode,struct file *filp)
 static int tq2440_seg_ioctl(struct inode *inode, struct file *file, unsigned int cmd, unsigned long arg)
 {
 	switch(cmd) {
-		case 1 : {
+		case 1 : {					//slave端的pause指令:暫停計時
 			tcon2 = __raw_readl(S3C2410_TCON);
 			tcon2 ^= (1<<8);
 			__raw_writel(tcon2, S3C2410_TCON);
 			break;
 		}
-		case 2 : {
+		case 2 : {					//slave端執行換歌指令後七段顯示器重新計時
 			timer1_count=0;
 			Initial_7SEG();
 			timer_1_2_init();
@@ -224,7 +224,7 @@ static int tq2440_seg_release(struct inode *inode,struct file *filp)
 	return 0;
 }	
 
-static irqreturn_t timer1_interrupt(int irq, void *dev_id, struct pt_regs *regs)
+static irqreturn_t timer1_interrupt(int irq, void *dev_id, struct pt_regs *regs)	//一秒中斷一次，切換顯示的秒數
 {		
 	srcpnd1 = __raw_readl(S3C2410_SRCPND);
 	srcpnd1 &= ~(1<<11);
@@ -263,7 +263,7 @@ static irqreturn_t timer1_interrupt(int irq, void *dev_id, struct pt_regs *regs)
 	return IRQ_RETVAL(IRQ_HANDLED);
 }
 	
-static irqreturn_t timer2_interrupt(int irq, void *dev_id, struct pt_regs *regs)
+static irqreturn_t timer2_interrupt(int irq, void *dev_id, struct pt_regs *regs)	//4ms中斷一次，用來產生視覺暫留
 {
 	
 	srcpnd = __raw_readl(S3C2410_SRCPND);
