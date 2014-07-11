@@ -56,7 +56,7 @@ static irqreturn_t timer1_interrupt(int irq, void *dev_id, struct pt_regs *regs)
 
 static void Initial_7SEG (void)		
 {
-        seven_seg_buf[0] = 0xc0;	//存放第一個七段要顯示的值
+        seven_seg_buf[0] = 0xc0;	//buf[0]存放第一個七段要顯示的值
         seven_seg_buf[1] = 0xc0;	//第二個七段
         seven_seg_buf[2] = 0xc0;	//第三個
         seven_seg_buf[3] = 0xc0;	//第四個	
