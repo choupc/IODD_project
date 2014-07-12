@@ -59,8 +59,8 @@ int main(int argc,int *argv[])
 		close(fd_pipe[0]);
 		/*由於fork會使fd_pipe[0],fd_pipe[1]產生兩份，記得把不必要的Descriptor關閉，可避免不當的操作。*/
    		dup2(fd_pipe[1],1);
-   		/*dup2(fd_pipe[1],1)可以把它想成複製fd_pipe[1]且當作是標準輸出(stdout)*/
-   		/*0:stdin 1:stdout 2:stderr */
+   		/*dup2(fd_pipe[1],1)可以把它想成複製fd_pipe[1]且當作是標準輸出(stdout)，
+   		0:stdin 1:stdout 2:stderr */
     		printf("child1\n");
 		//fd_fifo=open("/my_fifo",O_RDWR);
 		printf("child2\n");
@@ -110,7 +110,7 @@ void *get_pthread(void *arg){		/*get_pthread會讀取slave端輸入的指令，�
 
 		buf[strlen(buf)] = '\0';
 		printf("*%s*\n", buf);
-		if(write(fd_fifo, buf, strlen(buf)) != strlen(buf))
+		if(write(fd_fifo, buf, strlen(buf)) != strlen(buf))		//slave端輸入的指令寫到my_fifo檔。
 			perror("write");
 
   	}
