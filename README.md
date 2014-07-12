@@ -8,9 +8,9 @@ mp3 player(mplayer) and 7_segment LCD on TQ2440
 slave mode
 ============
 
-運行mplayer -slave -quiet <movie>，並在控制台視窗輸入slave命令。 //-slave 啟動從模式，-quiet 不輸出冗餘的資訊
+運行mplayer -slave -quiet <mp3>，並在控制台視窗輸入slave指令。 //-slave:啟動從模式，-quiet:不輸出冗餘的資訊
 
-常用到的 Mplayer指令：
+常用到的 Mplayer slave指令：
 
 loadfile   string        //參數string 為 歌曲名字。 
 
